@@ -36,56 +36,63 @@ const MORSE_TABLE = {
   '----.': '9',
   '-----': '0',
 };
-function decodeMorseLetter(words) {
 
-  return words === (' ') ? words : MORSE_TABLE[words];
-}
-function splitStringIntoTenChars (str) {
+
+function splitStringIntoTenChars(str) {
   const regexp = (/.{1,10}/g);
   return str.match(regexp);
 }
-function decode(expr) {
-  
-  const arr = splitStringIntoTenChars(expr);
 
-
-
-
-  let arrWithSpace = arr.map(el => {
+function cutSpaceStringInArray(arr) {
+  return arr.map(el => {
     return el === '**********' ? '**' : el;
   });
- 
-  let letters = arrWithSpace.map(element => {
-   let newArr = element.match(/.{2}/g);  
-  
-    return newArr;
-  });
-  
- 
-  let newArr2 = letters.map(elem => {
-    
-    let inAr = [];
-    
-    elem.forEach(el => {
-    if (el==='10') {
-      inAr.push('.');
-    }
-    else if (el==='11') {
-      inAr.push('-');
-    }
-    else if (el==='**') {
-      inAr.push(' ');
-    }
-      
-   
-    });
-     
-     return inAr;
-    
-  });
+}
 
- return newArr2.map(el => decodeMorseLetter(el.join(''))).join('');
- 
+function splitStringIntoTwoChars(array) {
+  return array.map(element => {
+    return element.match(/.{2}/g);
+  })
+};
+
+function changeNumbersOnChars(letters) {
+  return letters.map(elem => {
+    let newArray = [];
+    elem.forEach(el => {
+      if (el === '10') {
+        newArray.push('.');
+      }
+      else if (el === '11') {
+        newArray.push('-');
+      }
+      else if (el === '**') {
+        newArray.push(' ');
+      }
+    });
+    return newArray;
+  });
+};
+
+function decodeMorseLetter(letter) {
+  return letter === (' ') ? letter : MORSE_TABLE[letter];
+};
+
+function decodeMorseWord (array) {
+ return array.map(el => decodeMorseLetter(el.join(''))).join('');
+};
+
+
+function decode(expr) {
+
+  const arr = splitStringIntoTenChars(expr);
+
+  const arrWithSpace = cutSpaceStringInArray(arr);
+
+  const letters = splitStringIntoTwoChars(arrWithSpace);
+
+  const letterArray = changeNumbersOnChars(letters);
+
+  return decodeMorseWord (letterArray);
 }
 
 module.exports = {
